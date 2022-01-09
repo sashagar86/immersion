@@ -12,13 +12,13 @@ if (!empty($_POST)) {
 
     $error = checking_required_fields(['email', 'password']);
 
-    $error && redirect('page_register.php');
+    $error && redirect_to('page_register.php');
 
-    $user_id = get_user_by_email($email);
+    $user = get_user_by_email($email);
 
-    if ($user_id) {
+    if (!empty($user)) {
         set_flash_message('message', "Такой email уже используется в системе");
-        redirect("page_register.php");
+        redirect_to("page_register.php");
     }
 
     $user_id = add_user($email, $password);
@@ -29,20 +29,15 @@ if (!empty($_POST)) {
         set_flash_message ('message', "Что-то пошло не так");
     }
 
-    redirect("page_register.php");
+    redirect_to("page_register.php");
 }
 
 function get_user_by_email($email) {
     $db = connect_db();
     $stmt = $db->prepare("SELECT * FROM users WHERE email = :email");
     $stmt->execute(['email' => $email]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!empty($user)) {
-        return $user['id'];
-    }
-
-    return 0;
+    return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
 function add_user($email, $password) {
@@ -70,7 +65,7 @@ function display_flash_messages ($name) {
     return '';
 }
 
-function redirect($path) {
+function redirect_to($path) {
     header("Location: /$path");
     exit;
 }
@@ -89,7 +84,7 @@ function checking_required_fields($required_fields) {
     }
 
     if ($error) {
-        redirect('page_register.php');
+        redirect_to('page_register.php');
     }
 
     return false;
