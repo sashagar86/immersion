@@ -1,0 +1,102 @@
+<?php
+session_start();
+
+if (!empty($_POST)) {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    if (!is_email($email) && !empty($email)) {
+        set_flash_message('message', "Поле email заполнено не правильно.");
+        $error = true;
+    }
+
+    $error = checking_required_fields(['email', 'password']);
+
+    $error && redirect('page_register.php');
+
+    $user_id = get_user_by_email($email);
+
+    if ($user_id) {
+        set_flash_message('message', "Такой email уже используется в системе");
+        redirect("page_register.php");
+    }
+
+    $user_id = add_user($email, $password);
+
+    if ($user_id) {
+        set_flash_message ('message', "Пользователь зарегистрирован", 'success');
+    } else {
+        set_flash_message ('message', "Что-то пошло не так");
+    }
+
+    redirect("page_register.php");
+}
+
+function get_user_by_email($email) {
+    $db = connect_db();
+    $stmt = $db->prepare("SELECT * FROM users WHERE email = :email");
+    $stmt->execute(['email' => $email]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!empty($user)) {
+        return $user['id'];
+    }
+
+    return 0;
+}
+
+function add_user($email, $password) {
+    $db = connect_db();
+    $password = password_hash($password, PASSWORD_DEFAULT);
+    $stmt = $db->prepare("INSERT INTO `users`(`email`, `password`) VALUES (:email, :password)");
+    $stmt->execute(['email' => $email, 'password' => $password]);
+    return $db->lastInsertId();
+}
+
+function set_flash_message ($name, $message, $label = 'danger') {
+    $_SESSION[$name]['messages'][] = $message;
+    $_SESSION[$name]['label'] = $label;
+}
+
+function display_flash_messages ($name) {
+    if ($messages = $_SESSION[$name]['messages']) {
+        $messages = implode('<br/>', $messages);
+        $label = $_SESSION[$name]['label'];
+        unset($_SESSION[$name]);
+        return '<div class="alert alert-' . $label . ' text-dark" role="alert">
+                    ' . $messages . '
+                </div>';
+    }
+    return '';
+}
+
+function redirect($path) {
+    header("Location: /$path");
+    exit;
+}
+
+function is_email($email) {
+    return filter_var($email, FILTER_VALIDATE_EMAIL);
+}
+
+function checking_required_fields($required_fields) {
+    $error = false;
+    foreach ($required_fields as $field) {
+        if (empty($_POST[$field])) {
+            set_flash_message('message', "Поле $field должно быть заполнено");
+            $error = true;
+        }
+    }
+
+    if ($error) {
+        redirect('page_register.php');
+    }
+
+    return false;
+}
+
+function connect_db() {
+    return new PDO('mysql:host=localhost;dbname=immersion', 'root', '');
+}
+
+?>
