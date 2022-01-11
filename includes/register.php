@@ -1,14 +1,14 @@
 <?php
 session_start();
 
-require "includes/functions.php";
+require $_SERVER['DOCUMENT_ROOT'] . "/includes/functions.php";
 
 if (!empty($_POST)) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
     if (!is_email($email) && !empty($email)) {
-        set_flash_message('message', "Поле email заполнено не правильно.");
+        set_flash_message("Поле email заполнено не правильно.");
         $error = true;
     }
 
@@ -19,17 +19,19 @@ if (!empty($_POST)) {
     $user = get_user_by_email($email);
 
     if (!empty($user)) {
-        set_flash_message('message', "Такой email уже используется в системе");
+        set_flash_message( "Такой email уже используется в системе");
         redirect_to("page_register.php");
     }
 
     $user_id = add_user($email, $password);
 
     if ($user_id) {
-        set_flash_message ('message', "Пользователь зарегистрирован", 'success');
+        set_flash_message ("Регистрация успешна", 'success');
+        redirect_to("page_login.php");
     } else {
-        set_flash_message ('message', "Что-то пошло не так");
+        set_flash_message ("Что-то пошло не так");
     }
 
     redirect_to("page_register.php");
+
 }

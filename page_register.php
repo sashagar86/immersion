@@ -1,7 +1,7 @@
 <?php
     session_start();
     include_once 'includes/register.php';
-    $message = display_flash_messages('message');
+    $message = display_flash_messages();
 ?>
 
 <!DOCTYPE html>
