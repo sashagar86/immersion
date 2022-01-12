@@ -2,6 +2,7 @@
 session_start();
 include_once "includes/functions.php";
 //unset($_SESSION['user']);
+
 if (is_not_looged_in()) {
     redirect_to('page_login.php');
 }
@@ -9,6 +10,9 @@ if (is_not_looged_in()) {
 $message = display_flash_messages();
 $users = get_users();
 $login_user = get_login_user();
+
+$socials = ['telegram' => '#38A1F3', 'vk' => '#4680C2', 'instagram' => '#E1306C']
+
 ?>
 
 <!DOCTYPE html>
@@ -61,7 +65,7 @@ $login_user = get_login_user();
             <div class="row">
                 <div class="col-xl-12">
                     <?php if (is_admin()):?>
-                        <a class="btn btn-success" href="create_user.html">Добавить</a>
+                        <a class="btn btn-success" href="create_user.php">Добавить</a>
                     <?php endif;?>
 
                     <div class="border-faded bg-faded p-3 mb-g d-flex mt-3">
@@ -156,15 +160,14 @@ $login_user = get_login_user();
                                         <?php endif;?>
 
                                         <div class="d-flex flex-row">
-                                            <a href="javascript:void(0);" class="mr-2 fs-xxl" style="color:#4680C2">
-                                                <i class="fab fa-vk"></i>
-                                            </a>
-                                            <a href="javascript:void(0);" class="mr-2 fs-xxl" style="color:#38A1F3">
-                                                <i class="fab fa-telegram"></i>
-                                            </a>
-                                            <a href="javascript:void(0);" class="mr-2 fs-xxl" style="color:#E1306C">
-                                                <i class="fab fa-instagram"></i>
-                                            </a>
+                                            <?php foreach( $socials as $key => $color ):?>
+                                            <?php if (!empty($user[$key])):?>
+                                                    <a href="javascript:void(0);" class="mr-2 fs-xxl" style="color:<?php echo $color?>">
+                                                        <i class="fab fa-<?php echo $key;?>"></i>
+                                                    </a>
+                                            <?php endif;?>
+
+                                            <?php endforeach;?>
                                         </div>
                                     </div>
                                 </div>

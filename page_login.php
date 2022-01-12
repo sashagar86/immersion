@@ -1,7 +1,12 @@
 <?php
     session_start();
     include_once 'includes/register.php';
+    include_once "includes/functions.php";
     $message = display_flash_messages();
+
+    if (!is_not_looged_in()) {
+        redirect_to('users.php');
+    }
 
 ?>
 
