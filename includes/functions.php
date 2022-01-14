@@ -117,6 +117,8 @@ function edit($user_id, $fullname, $post, $phone, $address) {
         'address' => $address,
         'id' => $user_id
     ]);
+
+    return $stmt->rowCount();
 }
 
 function set_status($user_id, $status) {
@@ -176,6 +178,21 @@ function getUploadsDir() {
     }
 
     return $dir;
+}
+
+//edit profile
+
+function get_user_by_id($id) {
+    $db = connect_db();
+    $sql = "SELECT * FROM users WHERE id = :id";
+    $stmt = $db->prepare($sql);
+    $stmt->execute(['id' => $id]);
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+function is_author($logged_user, $user){
+    return $logged_user['id'] == $user['id'];
 }
 
 

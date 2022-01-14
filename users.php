@@ -2,7 +2,6 @@
 session_start();
 include_once "includes/functions.php";
 //unset($_SESSION['user']);
-
 if (is_not_looged_in()) {
     redirect_to('page_login.php');
 }
@@ -116,7 +115,7 @@ $uploads = 'uploads/';
                                             </a>
                                             <?php if (is_admin() || $is_owner):?>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="edit.php/?id=<?php echo $user_id;?>">
+                                                    <a class="dropdown-item" href="edit.php?id=<?php echo $user_id;?>">
                                                         <i class="fa fa-edit"></i>
                                                         Редактировать</a>
                                                     <a class="dropdown-item" href="security.php/?id=<?php echo $user_id?>">

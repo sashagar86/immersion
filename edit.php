@@ -1,3 +1,27 @@
+<?php
+session_start();
+include_once "includes/functions.php";
+
+if (is_not_looged_in()) {
+    redirect_to('page_login.php');
+}
+
+$id = (int)$_GET['id'];
+$login_user = get_login_user();
+$user = get_user_by_id($id);
+
+$is_owner = is_author($login_user, $user);
+
+if (!is_admin() && !$is_owner) {
+    set_flash_message('Вы можете редактровтаь только свой профиль');
+    redirect_to('users.php');
+}
+
+$_SESSION['edit_user_id'] = $user['id'];
+
+$messages = display_flash_messages();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,6 +35,7 @@
     <link id="myskin" rel="stylesheet" media="screen, print" href="css/skins/skin-master.css">
     <link rel="stylesheet" media="screen, print" href="css/fa-solid.css">
     <link rel="stylesheet" media="screen, print" href="css/fa-brands.css">
+    <link rel="stylesheet" media="screen, print" href="css/fa-regular.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary bg-primary-gradient">
@@ -21,14 +46,15 @@
                     <a class="nav-link" href="#">Главная <span class="sr-only">(current)</span></a>
                 </li>
             </ul>
-            <ul class="navbar-nav ml-auto">
+            <?php if (is_not_looged_in()):?>
                 <li class="nav-item">
                     <a class="nav-link" href="page_login.html">Войти</a>
                 </li>
+            <?php else:?>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Выйти</a>
+                    <a class="nav-link" href="includes/logout.php">Выйти</a>
                 </li>
-            </ul>
+            <?php endif;?>
         </div>
     </nav>
     <main id="js-page-content" role="main" class="page-content mt-3">
@@ -38,7 +64,7 @@
             </h1>
 
         </div>
-        <form action="">
+        <form action="includes/edit.php" method="post">
             <div class="row">
                 <div class="col-xl-6">
                     <div id="panel-1" class="panel">
@@ -50,28 +76,28 @@
                                 <!-- username -->
                                 <div class="form-group">
                                     <label class="form-label" for="simpleinput">Имя</label>
-                                    <input type="text" id="simpleinput" class="form-control" value="Иван иванов">
+                                    <input type="text" id="simpleinput" class="form-control" value="<?php echo $user['fullname'];?>" name="fullname">
                                 </div>
 
                                 <!-- title -->
                                 <div class="form-group">
                                     <label class="form-label" for="simpleinput">Место работы</label>
-                                    <input type="text" id="simpleinput" class="form-control" value="Marlin Веб-разработчик">
+                                    <input type="text" id="simpleinput" class="form-control" value="<?php echo $user['post']; ?>" name="post">
                                 </div>
 
                                 <!-- tel -->
                                 <div class="form-group">
                                     <label class="form-label" for="simpleinput">Номер телефона</label>
-                                    <input type="text" id="simpleinput" class="form-control" value="8 888 8888 88">
+                                    <input type="text" id="simpleinput" class="form-control" value="<?php echo $user['phone']; ?>" name="phone">
                                 </div>
 
                                 <!-- address -->
                                 <div class="form-group">
                                     <label class="form-label" for="simpleinput">Адрес</label>
-                                    <input type="text" id="simpleinput" class="form-control" value="Восточные Королевства, Штормград">
+                                    <input type="text" id="simpleinput" class="form-control" value="<?php echo $user['address']; ?>" name="address">
                                 </div>
                                 <div class="col-md-12 mt-3 d-flex flex-row-reverse">
-                                    <button class="btn btn-warning">Редактировать</button>
+                                    <button class="btn btn-warning" type="submit">Редактировать</button>
                                 </div>
                             </div>
                         </div>
@@ -83,7 +109,7 @@
 
     <script src="js/vendors.bundle.js"></script>
     <script src="js/app.bundle.js"></script>
-    <script>
+    <script type="text/javascript">
 
         $(document).ready(function()
         {

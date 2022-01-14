@@ -3,6 +3,10 @@ session_start();
 include_once "includes/functions.php";
 //unset($_SESSION['user']);
 
+if (is_not_looged_in()) {
+    redirect_to('page_login.php');
+}
+
 if (!is_admin()) {
     redirect_to('users.php');
 }
@@ -35,14 +39,15 @@ $messages = display_flash_messages();
                     <a class="nav-link" href="#">Главная <span class="sr-only">(current)</span></a>
                 </li>
             </ul>
-            <ul class="navbar-nav ml-auto">
+            <?php if (is_not_looged_in()):?>
                 <li class="nav-item">
                     <a class="nav-link" href="page_login.html">Войти</a>
                 </li>
+            <?php else:?>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Выйти</a>
+                    <a class="nav-link" href="includes/logout.php">Выйти</a>
                 </li>
-            </ul>
+            <?php endif;?>
         </div>
     </nav>
     <main id="js-page-content" role="main" class="page-content mt-3">
