@@ -55,11 +55,7 @@ function checking_required_fields($required_fields) {
         }
     }
 
-    if ($error) {
-        redirect_to('page_register.php');
-    }
-
-    return false;
+    return $error;
 }
 
 function is_not_looged_in()
@@ -107,5 +103,80 @@ function logout() {
 function get_login_user() {
     return $_SESSION['user'];
 }
+
+// add user
+function edit($user_id, $fullname, $post, $phone, $address) {
+    $db = connect_db();
+    $sql = "UPDATE users SET fullname = :fullname, post = :post, phone = :phone, address = :address WHERE id = :id";
+    $stmt = $db->prepare($sql);
+
+    $stmt->execute([
+        'fullname' => $fullname,
+        'post' => $post,
+        'phone' => $phone,
+        'address' => $address,
+        'id' => $user_id
+    ]);
+}
+
+function set_status($user_id, $status) {
+    $db = connect_db();
+    $sql = "UPDATE users SET status = :status WHERE id = :id";
+    $stmt = $db->prepare($sql);
+
+    $stmt->execute([
+        'status' => $status,
+        'id' => $user_id
+    ]);
+}
+
+function upload_image($user_id) {
+    $name = $_FILES['image']['name'];
+    $name = explode('.', $name);
+    $extension = '.' . end($name);
+
+    $tmp_name = $_FILES['image']['tmp_name'];
+    $filename = uniqid() . $extension;
+    $dir = getUploadsDir();
+    if (move_uploaded_file($tmp_name, $dir . $filename)) {
+        insertImageInDb($user_id, $filename);
+    }
+
+    return false;
+}
+
+function add_social_links($user_id, $telegram, $vkontakte, $instagram) {
+    $db = connect_db();
+    $sql = "UPDATE users SET telegram = :telegram, vk = :vkontakte, instagram = :instagram WHERE id = :id";
+    $stmt = $db->prepare($sql);
+
+    $stmt->execute([
+        'telegram' => $telegram,
+        'vkontakte' => $vkontakte,
+        'instagram' => $instagram,
+        'id' => $user_id
+    ]);
+}
+
+function insertImageInDb($user_id, $filename) {
+    $db = connect_db();
+    $sql = "UPDATE users SET image = :image WHERE id = :id";
+    $stmt = $db->prepare($sql);
+
+    $stmt->execute([
+        'image' => $filename,
+        'id' => $user_id
+    ]);
+}
+
+function getUploadsDir() {
+    $dir = $_SERVER['DOCUMENT_ROOT'] . '/uploads/';
+    if(!is_dir($dir)) {
+        mkdir($dir);
+    }
+
+    return $dir;
+}
+
 
 
