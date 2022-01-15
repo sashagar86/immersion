@@ -17,8 +17,6 @@ if (!is_admin() && !$is_owner) {
     redirect_to('users.php');
 }
 
-$_SESSION['edit_user_id'] = $user['id'];
-
 $messages = display_flash_messages();
 
 ?>
