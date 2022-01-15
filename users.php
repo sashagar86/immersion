@@ -13,6 +13,8 @@ $login_user = get_login_user();
 $socials = ['telegram' => '#38A1F3', 'vk' => '#4680C2', 'instagram' => '#E1306C'];
 $uploads_dir = getUploadsDir();
 $uploads = 'uploads/';
+
+
 ?>
 
 <!DOCTYPE html>
@@ -113,8 +115,11 @@ $uploads = 'uploads/';
                                                     <i class="fal fa-angle-down d-inline-block ml-1 fs-md"></i>
                                                 <?php endif;?>
                                             </a>
-                                            <?php if (is_admin() || $is_owner):?>
-                                                <div class="dropdown-menu">
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="page_profile.php?id=<?php echo $user_id;?>">
+                                                    <i class="fa fa-user"></i>
+                                                    Смотреть профиль</a>
+                                                <?php if (is_admin() || $is_owner):?>
                                                     <a class="dropdown-item" href="edit.php?id=<?php echo $user_id;?>">
                                                         <i class="fa fa-edit"></i>
                                                         Редактировать</a>
@@ -132,8 +137,8 @@ $uploads = 'uploads/';
                                                         <i class="fa fa-window-close"></i>
                                                         Удалить
                                                     </a>
-                                                </div>
                                             <?php endif;?>
+                                            </div>
                                             <?php if (!empty($user['post'])):?>
                                                 <span class="text-truncate text-truncate-xl"><?php echo $user['post']?></span>
                                             <?php endif;?>

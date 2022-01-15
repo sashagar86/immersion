@@ -14,7 +14,7 @@ if (!empty($_POST)) {
 
     if (empty($user)) {
         set_flash_message('Такого пользовтаеля не существует');
-        redirect_to('users.php');
+        redirect_to('page_profile.php?id=' . $user_id);
     }
 
     //general
