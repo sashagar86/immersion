@@ -232,5 +232,20 @@ function get_image($user) {
     return $uploads . ($user['image'] ?: 'avatar-m.png');
 }
 
+function delete_file($filename) {
+    $file = getUploadsDir() . $filename;
+
+    if (file_exists($file)) {
+        unlink($file);
+    }
+}
+
+function remove_user($user) {
+    $db = connect_db();
+    $stmt = $db->prepare("DELETE FROM users where id = :id");
+    $stmt->execute(['id' => $user['id']]);
+    delete_file($user['image']);
+}
+
 
 
