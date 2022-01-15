@@ -19,8 +19,6 @@ if (!is_admin() && !$is_owner) {
 
 $_SESSION['edit_user_id'] = $user['id'];
 
-$messages = display_flash_messages();
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -64,7 +62,7 @@ $messages = display_flash_messages();
             </h1>
 
         </div>
-        <form action="includes/edit.php" method="post">
+        <form action="includes/edit.php?id=<?php echo $id; ?>" method="post">
             <div class="row">
                 <div class="col-xl-6">
                     <div id="panel-1" class="panel">

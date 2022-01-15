@@ -118,13 +118,13 @@ $uploads = 'uploads/';
                                                     <a class="dropdown-item" href="edit.php?id=<?php echo $user_id;?>">
                                                         <i class="fa fa-edit"></i>
                                                         Редактировать</a>
-                                                    <a class="dropdown-item" href="security.php/?id=<?php echo $user_id?>">
+                                                    <a class="dropdown-item" href="security.php?id=<?php echo $user_id?>">
                                                         <i class="fa fa-lock"></i>
                                                         Безопасность</a>
-                                                    <a class="dropdown-item" href="status.php/?id=<?php echo $user_id?>">
+                                                    <a class="dropdown-item" href="status.php?id=<?php echo $user_id?>">
                                                         <i class="fa fa-sun"></i>
                                                         Установить статус</a>
-                                                    <a class="dropdown-item" href="media.php/?id=<?php echo $user_id?>">
+                                                    <a class="dropdown-item" href="media.php?id=<?php echo $user_id?>">
                                                         <i class="fa fa-camera"></i>
                                                         Загрузить аватар
                                                     </a>
