@@ -17,16 +17,7 @@ if(empty($user)) {
 
 $socials = ['telegram' => '#38A1F3', 'vk' => '#4680C2', 'instagram' => '#E1306C'];
 
-$uploads_dir = getUploadsDir();
-$uploads = 'uploads/';
-
-$file = $uploads_dir . ($user['image'] ?: 'avatar-m.png');
-
-if (!file_exists($file)) {
-    $image = $uploads . 'avatar-m.png';
-}
-
-$image = $uploads . ($user['image'] ?: 'avatar-m.png');
+$image = get_image($user);
 
 $messages = display_flash_messages();
 ?>

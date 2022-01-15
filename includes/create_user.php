@@ -44,7 +44,9 @@ if(!empty($_POST)) {
 
     set_status($user_id, $status);
 
-    upload_image($user_id);
+    $image = $_FILES;
+
+    upload_image($user_id, $image);
 
     if ($user_id) {
         set_flash_message ("Пользователь добавлен", 'success');

@@ -1,3 +1,28 @@
+<?php
+session_start();
+include_once "includes/functions.php";
+
+if (is_not_looged_in()) {
+    redirect_to('page_login.php');
+}
+
+$id = (int)$_GET['id'];
+$login_user = get_login_user();
+
+$user = get_user_by_id($id);
+$image = get_image($user);
+
+$is_owner = is_author($login_user, $user);
+
+if (!is_admin() && !$is_owner) {
+    set_flash_message('Вы можете редактировтаь только свой профиль');
+    redirect_to('users.php');
+}
+
+$messages = display_flash_messages();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,12 +47,15 @@
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="page_login.html">Войти</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Выйти</a>
-                </li>
+                <?php if (is_not_looged_in()):?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="page_login.php">Войти</a>
+                    </li>
+                <?php else:?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="includes/logout.php">Выйти</a>
+                    </li>
+                <?php endif;?>
             </ul>
         </div>
     </nav>
@@ -38,7 +66,7 @@
             </h1>
 
         </div>
-        <form action="">
+        <form action="includes/upload_image.php?id=<?php echo $id?>" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-xl-6">
                     <div id="panel-1" class="panel">
@@ -48,14 +76,13 @@
                             </div>
                             <div class="panel-content">
                                 <div class="form-group">
-                                    <img src="img/demo/authors/josh.png" alt="" class="img-responsive" width="200">
+                                    <img src="<?php echo $image?>" alt="" class="img-responsive" width="200">
                                 </div>
 
                                 <div class="form-group">
                                     <label class="form-label" for="example-fileinput">Выберите аватар</label>
-                                    <input type="file" id="example-fileinput" class="form-control-file">
+                                    <input type="file" id="example-fileinput" class="form-control-file" name="image">
                                 </div>
-
 
                                 <div class="col-md-12 mt-3 d-flex flex-row-reverse">
                                     <button class="btn btn-warning">Загрузить</button>

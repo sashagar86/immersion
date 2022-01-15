@@ -132,16 +132,19 @@ function set_status($user_id, $status) {
     ]);
 }
 
-function upload_image($user_id) {
-    $name = $_FILES['image']['name'];
-    $name = explode('.', $name);
-    $extension = '.' . end($name);
+function upload_image($user_id, $image) {
+    $name = $image['image']['name'];
 
-    $tmp_name = $_FILES['image']['tmp_name'];
-    $filename = uniqid() . $extension;
-    $dir = getUploadsDir();
-    if (move_uploaded_file($tmp_name, $dir . $filename)) {
-        insertImageInDb($user_id, $filename);
+    if ($name) {
+        $name = explode('.', $name);
+        $extension = '.' . end($name);
+
+        $tmp_name = $image['image']['tmp_name'];
+        $filename = uniqid() . $extension;
+        $dir = getUploadsDir();
+        if (move_uploaded_file($tmp_name, $dir . $filename)) {
+            insertImageInDb($user_id, $filename);
+        }
     }
 
     return false;
@@ -212,6 +215,21 @@ function check_existing_email($email, $user_email) {
 
     $user = get_user_by_email($email);
     return !empty($user);
+}
+
+//upload image
+
+function get_image($user) {
+    $uploads_dir = getUploadsDir();
+    $uploads = 'uploads/';
+
+    $file = $uploads_dir . ($user['image'] ?: 'avatar-m.png');
+
+    if (!file_exists($file)) {
+        $image = $uploads . 'avatar-m.png';
+    }
+
+    return $uploads . ($user['image'] ?: 'avatar-m.png');
 }
 
 
