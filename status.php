@@ -1,3 +1,25 @@
+<?php
+session_start();
+include_once "includes/functions.php";
+
+if (is_not_looged_in()) {
+    redirect_to('page_login.php');
+}
+
+$id = (int)$_GET['id'];
+$login_user = get_login_user();
+$user = get_user_by_id($id);
+
+$is_owner = is_author($login_user, $user);
+
+if (!is_admin() && !$is_owner) {
+    set_flash_message('Вы можете редактировтаь только свой профиль');
+    redirect_to('users.php');
+}
+
+$_SESSION['edit_user_id'] = $user['id'];
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,7 +60,7 @@
             </h1>
 
         </div>
-        <form action="">
+        <form action="includes/set_status.php?id=<?php echo $id; ?>" method="post">
             <div class="row">
                 <div class="col-xl-6">
                     <div id="panel-1" class="panel">
@@ -52,10 +74,15 @@
                                         <!-- status -->
                                         <div class="form-group">
                                             <label class="form-label" for="example-select">Выберите статус</label>
-                                            <select class="form-control" id="example-select">
-                                                <option>Онлайн</option>
-                                                <option>Отошел</option>
-                                                <option>Не беспокоить</option>
+
+                                            <?php
+                                                $statuses = ['online' => 'Онлайн', 'outside' => 'Отошел', 'not_disturb' => 'Не беспокоить'];
+                                            ?>
+
+                                            <select class="form-control" id="example-select" name="status">
+                                                <?php foreach( $statuses as $key => $status ):?>
+                                                    <option value="<?php echo $key?>" <?php if ($key == $user['status']):?>selected<?php endif;?>><?php echo $status?></option>
+                                                <?php endforeach;?>
                                             </select>
                                         </div>
                                     </div>
@@ -65,7 +92,6 @@
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
                 </div>
             </div>
