@@ -1,3 +1,27 @@
+<?php
+session_start();
+include_once "includes/functions.php";
+
+if (is_not_looged_in()) {
+    redirect_to('page_login.php');
+}
+
+$id = (int)$_GET['id'];
+$login_user = get_login_user();
+$user = get_user_by_id($id);
+
+$is_owner = is_author($login_user, $user);
+
+if (!is_admin() && !$is_owner) {
+    set_flash_message('Вы можете редактировтаь только свой профиль');
+    redirect_to('users.php');
+}
+
+$_SESSION['edit_user_id'] = $user['id'];
+
+$messages = display_flash_messages();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,15 +46,23 @@
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="page_login.html">Войти</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Выйти</a>
-                </li>
+                <?php if (is_not_looged_in()):?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="page_login.html">Войти</a>
+                    </li>
+                <?php else:?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="includes/logout.php">Выйти</a>
+                    </li>
+                <?php endif;?>
             </ul>
         </div>
     </nav>
+
+    <?php if (!empty($messages)):?>
+        <?php echo $messages;?>
+    <?php endif;?>
+
     <main id="js-page-content" role="main" class="page-content mt-3">
         <div class="subheader">
             <h1 class="subheader-title">
@@ -38,7 +70,7 @@
             </h1>
 
         </div>
-        <form action="">
+        <form action="includes/edit_credentials.php?id=<?php echo $id; ?>" method="post">
             <div class="row">
                 <div class="col-xl-6">
                     <div id="panel-1" class="panel">
@@ -50,13 +82,13 @@
                                 <!-- email -->
                                 <div class="form-group">
                                     <label class="form-label" for="simpleinput">Email</label>
-                                    <input type="text" id="simpleinput" class="form-control" value="john@example.com">
+                                    <input type="text" id="simpleinput" class="form-control" value="<?php echo $user['email']?>" name="email">
                                 </div>
 
                                 <!-- password -->
                                 <div class="form-group">
                                     <label class="form-label" for="simpleinput">Пароль</label>
-                                    <input type="password" id="simpleinput" class="form-control">
+                                    <input type="password" id="simpleinput" class="form-control" name="password">
                                 </div>
 
                                 <!-- password confirmation-->
@@ -67,7 +99,7 @@
 
 
                                 <div class="col-md-12 mt-3 d-flex flex-row-reverse">
-                                    <button class="btn btn-warning">Изменить</button>
+                                    <button class="btn btn-warning" type="submit">Изменить</button>
                                 </div>
                             </div>
                         </div>

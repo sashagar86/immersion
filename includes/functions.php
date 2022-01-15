@@ -195,5 +195,24 @@ function is_author($logged_user, $user){
     return $logged_user['id'] == $user['id'];
 }
 
+//edit credentials
+
+function edit_credentials($user_id, $email, $password) {
+    $db = connect_db();
+    $password = password_hash($password, PASSWORD_DEFAULT);
+    $stmt = $db->prepare("UPDATE `users` SET `email` = :email, password = :password WHERE id = :user_id");
+
+    $stmt->execute(['email' => $email, 'password' => $password, 'user_id' => $user_id]);
+}
+
+function check_existing_email($email, $user_email) {
+    if ($email == $user_email) {
+        return false;
+    }
+
+    $user = get_user_by_email($email);
+    return !empty($user);
+}
+
 
 
