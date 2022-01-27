@@ -53,15 +53,15 @@ $messages = display_flash_messages();
                         </li>
                     <?php else:?>
                         <li class="nav-item">
-                            <a class="nav-link" href="includes/logout.php">Выйти</a>
+                            <a class="nav-link" href="/logout">Выйти</a>
                         </li>
                     <?php endif;?>
                 </ul>
             </div>
         </nav>
 
-        <?php if (!empty($messages)):?>
-            <?php echo $messages;?>
+        <?php if (App\Flash::getMessages()):?>
+            <?php echo App\Flash::getMessages(); ?>
         <?php endif;?>
 
         <main id="js-page-content" role="main" class="page-content mt-3">

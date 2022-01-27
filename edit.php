@@ -44,13 +44,13 @@ $_SESSION['edit_user_id'] = $user['id'];
                     <a class="nav-link" href="#">Главная <span class="sr-only">(current)</span></a>
                 </li>
             </ul>
-            <?php if (is_not_looged_in()):?>
+            <?php if (Validator::is_not_looged_in()):?>
                 <li class="nav-item">
                     <a class="nav-link" href="page_login.html">Войти</a>
                 </li>
             <?php else:?>
                 <li class="nav-item">
-                    <a class="nav-link" href="includes/logout.php">Выйти</a>
+                    <a class="nav-link" href="/logout">Выйти</a>
                 </li>
             <?php endif;?>
         </div>

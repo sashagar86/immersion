@@ -1,6 +1,11 @@
 <?php
-session_start();
-include $_SERVER['DOCUMENT_ROOT'] . "/includes/functions.php";
+
+$flash = new \App\Flash();
+
+if (!\App\Validator::is_not_looged_in()) {
+    header('Location: /users');
+}
+
 if (!empty($_POST)) {
     $email = $_POST['email'];
     $password = $_POST['password'];
@@ -8,10 +13,26 @@ if (!empty($_POST)) {
     $login = login($email, $password);
 
     if ($login) {
-        set_flash_message("Здравствуйте $email", 'success');
-        redirect_to('users.php');
+        \App\Flash::setMessage
+("Здравствуйте $email", 'success');
+        header('Location: /users'); exit;
     }
 
-    set_flash_message("Поле email или пароль введены не корректно");
-    redirect_to('page_login.php');
+    \App\Flash::setMessage
+("Поле email или пароль введены не корректно");
 }
+
+function login($email, $password) {
+    $db = new \DB\QueryBuilder();
+    $user = $db->getOne('users', $email, 'email');
+    $check_password = password_verify($password, $user['password']);
+
+    $login = !empty($user) && $check_password;
+
+    if($login) {
+        $_SESSION['user'] = $user;
+    }
+
+    return $login;
+}
+

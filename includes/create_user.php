@@ -1,6 +1,14 @@
 <?php
-session_start();
-require $_SERVER['DOCUMENT_ROOT'] . "/includes/functions.php";
+
+if (Validator::is_not_looged_in()) {
+    header("Location: /login"); exit;
+}
+
+if (!Validator::is_admin()) {
+    header("Location: /users"); exit;
+}
+
+$db = new QueryBuilder();
 
 if(!empty($_POST)) {
     $email = $_POST['email'];
@@ -17,42 +25,46 @@ if(!empty($_POST)) {
 
     //socials
     $telegram = $_POST['telegram'];
-    $vkontakte = $_POST['vkontakte'];
+    $vkontakte = $_POST['vk'];
     $instagram = $_POST['instagram'];
 
-    if (!is_email($email) && !empty($email)) {
-        set_flash_message("Поле email заполнено не правильно.");
+    if (!Validator::isEmail($email) && !empty($email)) {
+        Flash::setMessage("Поле email заполнено не правильно.");
         $error = true;
     }
 
-    $error = checking_required_fields(['email', 'password']);
+    $errorFields = Validator::requiredFields(['email', 'password']);
 
-    $error && redirect_to('create_user.php');
+    if (!empty($errorFields)) {
+        foreach ($errorFields as $field) {
+            Flash::setMessage("Поле $field должно быть заполнено");
+        }
 
-    $user = get_user_by_email($email);
-
-    if (!empty($user)) {
-        set_flash_message( "Такой email уже используется в системе");
-        redirect_to("create_user.php");
+        header("Location: /create-user"); exit;
     }
 
-    $user_id = add_user($email, $password);
+    if(!$error) {
+        $user = $db->getOne('users', $email, 'email');
 
-    edit($user_id, $fullname, $post, $phone, $address);
+        if (!empty($user)) {
+            Flash::setMessage( "Такой email уже используется в системе");
+            header('Location: /create-user'); exit;
+        }
 
-    add_social_links($user_id, $telegram, $vkontakte, $instagram);
+        $user_id = $db->create('users', $_POST);
 
-    set_status($user_id, $status);
+//    $image = $_FILES;
 
-    $image = $_FILES;
+//    upload_image($user_id, $image);
 
-    upload_image($user_id, $image);
+        if ($user_id) {
+            Flash::setMessage ("Пользователь добавлен", 'success');
+        } else {
+            Flash::setMessage ("Что-то пошло не так");
+        }
 
-    if ($user_id) {
-        set_flash_message ("Пользователь добавлен", 'success');
-        redirect_to('users.php');
-    } else {
-        set_flash_message ("Что-то пошло не так");
-        redirect_to('create_user.php');
+        header('Location: /create-user');
     }
+
+
 }

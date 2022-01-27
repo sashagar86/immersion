@@ -50,7 +50,7 @@ $messages = display_flash_messages();
                     </li>
                 <?php else:?>
                     <li class="nav-item">
-                        <a class="nav-link" href="includes/logout.php">Выйти</a>
+                        <a class="nav-link" href="/logout">Выйти</a>
                     </li>
                 <?php endif;?>
             </ul>

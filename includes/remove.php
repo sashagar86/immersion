@@ -1,40 +1,47 @@
 <?php
 
-session_start();
-require $_SERVER['DOCUMENT_ROOT'] . "/includes/functions.php";
-
 $user_id = (int)$_GET['id'];
+$db = new QueryBuilder();
 
 if (!$user_id) {
-    set_flash_message('Неверно передан id пользователя');
-    redirect_to('users.php');
+    Flash::setMessage('Неверно передан id пользователя');
+    header("Location: /users"); exit;
 }
 
-$user = get_user_by_id($user_id);
+$user = $db->getOne('users', $user_id);
 
 if (empty($user)) {
-    set_flash_message('Такого пользовтаеля не существует');
-    redirect_to('users.php?id=' . $user_id);
+    Flash::setMessage('Такого пользовтаеля не существует');
+    header("Location: /users"); exit;
 }
 
 $login_user = get_login_user();
-$is_owner = is_author($login_user, $user);
+$is_owner = Validator::is_author($login_user, $user);
 
 
-if (!is_admin() && !$is_owner) {
-    set_flash_message('Вы можете удалить только свой профиль');
-    redirect_to('users.php');
+if (!Validator::is_admin() && !$is_owner) {
+    Flash::setMessage('Вы можете удалить только свой профиль');
+    header("Location: /users"); exit;
 }
 
-remove_user($user);
+$db->delete('users', $user['id']);
 
 if ($is_owner) {
-    set_flash_message('Вы удалили свой профиль', 'success');
+    Flash::setMessage('Вы удалили свой профиль', 'success');
     logout();
-    redirect_to('page_register.php');
+    header("Location: /registration"); exit;
 }
 
-if (is_admin()) {
-    set_flash_message("Вы удалили профиль {$user['fullname']}", 'success');
-    redirect_to('users.php');
+if (Validator::is_admin()) {
+    Flash::setMessage("Вы удалили профиль {$user['fullname']}", 'success');
+    header("Location: /users"); exit;
+}
+
+function get_login_user() {
+    return $_SESSION['user'];
+}
+
+function logout() {
+    unset($_SESSION['user']);
+    header("Location: /login"); exit;
 }

@@ -1,17 +1,6 @@
 <?php
-session_start();
-include_once "includes/functions.php";
-//unset($_SESSION['user']);
 
-if (is_not_looged_in()) {
-    redirect_to('page_login.php');
-}
-
-if (!is_admin()) {
-    redirect_to('users.php');
-}
-
-$messages = display_flash_messages();
+include __DIR__ . '/includes/create_user.php';
 
 ?>
 
@@ -39,13 +28,13 @@ $messages = display_flash_messages();
                     <a class="nav-link" href="#">Главная <span class="sr-only">(current)</span></a>
                 </li>
             </ul>
-            <?php if (is_not_looged_in()):?>
+            <?php if (Validator::is_not_looged_in()):?>
                 <li class="nav-item">
                     <a class="nav-link" href="page_login.html">Войти</a>
                 </li>
             <?php else:?>
                 <li class="nav-item">
-                    <a class="nav-link" href="includes/logout.php">Выйти</a>
+                    <a class="nav-link" href="/logout">Выйти</a>
                 </li>
             <?php endif;?>
         </div>
@@ -57,11 +46,10 @@ $messages = display_flash_messages();
             </h1>
         </div>
 
-        <?php if (!empty($messages)):?>
-            <?php echo $messages;?>
-        <?php endif;?>
+        <?php echo App\Flash::getMessages(); ?>
 
-        <form action="includes/create_user.php" method="post" enctype="multipart/form-data">
+
+        <form method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-xl-6">
                     <div id="panel-1" class="panel">
@@ -157,7 +145,7 @@ $messages = display_flash_messages();
                                                     </span>
                                                 </span>
                                             </div>
-                                            <input type="text" class="form-control border-left-0 bg-transparent pl-0" name="vkontakte">
+                                            <input type="text" class="form-control border-left-0 bg-transparent pl-0" name="vk">
                                         </div>
                                     </div>
                                     <div class="col-md-4">

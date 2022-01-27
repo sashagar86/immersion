@@ -1,6 +1,9 @@
 <?php
 session_start();
 
-require $_SERVER['DOCUMENT_ROOT'] . '/includes/functions.php';
+function logout() {
+    unset($_SESSION['user']);
+    header('Location: /login');
+}
 
 logout();
