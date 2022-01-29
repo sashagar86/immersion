@@ -18,7 +18,7 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
 
     $r->addRoute('GET', '/user/{id:\d+}', ['\App\Controllers\UserController', 'show']);
     $r->addRoute(['GET', 'POST'], '/user/{id:\d+}/edit[/{action}]', ['\App\Controllers\UserController', 'edit']);
-    $r->addRoute('GET', '/users', ['\App\Controllers\UserController', 'all']);
+    $r->addRoute('GET', '/users', ['\App\Controllers\UserController', 'index']);
     $r->addRoute(['GET', 'POST'], '/user/add', ['\App\Controllers\UserController', 'create']);
     $r->addRoute('GET', '/user/remove/{id:\d+}', ['\App\Controllers\UserController', 'delete']);
 });

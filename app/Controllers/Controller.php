@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\User;
 use DB\Connection;
 use DB\QueryBuilder;
 use Delight\Auth\Auth;
@@ -14,6 +15,7 @@ class Controller
     public $templates;
     public $mailer;
     public $db;
+    public $model;
 
     public function __construct()
     {
@@ -21,5 +23,6 @@ class Controller
         $this->templates = new Engine('../app/views');
         $this->auth = new Auth(Connection::make());
         $this->mailer = new SimpleMail();
+        $this->model = new User();
     }
 }
