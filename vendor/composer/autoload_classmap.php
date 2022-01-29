@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'SimpleMail' => $vendorDir . '/eoghanobrien/php-simple-mail/class.simple_mail.php',
 );

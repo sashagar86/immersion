@@ -1,10 +1,6 @@
 <?php
-    $this->layout('layout', ['title' => 'Список пользовтаелей']);
-    $db = new \DB\QueryBuilder();
-    $users = $db->getAll('users');
-
+    $this->layout('layouts/layout', ['title' => 'Список пользовтаелей']);
     $socials = ['telegram' => '#38A1F3', 'vk' => '#4680C2', 'instagram' => '#E1306C'];
-    $login_user = $_SESSION['user'];
 ?>
 
 <div class="subheader">
@@ -14,8 +10,8 @@
 </div>
 <div class="row">
     <div class="col-xl-12">
-        <?php if (\App\Validator::is_admin()):?>
-            <a class="btn btn-success" href="/create-user">Добавить</a>
+        <?php if ($isAdmin):?>
+            <a class="btn btn-success" href="/user/add">Добавить</a>
         <?php endif;?>
 
         <div class="border-faded bg-faded p-3 mb-g d-flex mt-3">
@@ -37,15 +33,7 @@
         <?php foreach( $users as $user ):?>
             <?php
             $online = $user['online'] ? 'success' : 'warning';
-            $file = $uploads_dir . ($user['image'] ?: 'avatar-m.png');
-
-            if (!file_exists($file)) {
-                $image = $uploads . 'avatar-m.png';
-            }
-
-            $image = $uploads . ($user['image'] ?: 'avatar-m.png');
-
-            $is_owner = $user['email'] == $login_user['email'];
+            $is_owner = $user['id'] == $currentUser;
             $user_id = $user['id'];
             ?>
             <div class="col-xl-4">
@@ -53,31 +41,31 @@
                     <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
                         <div class="d-flex flex-row align-items-center">
                                     <span class="status status-<?php echo $online;?> mr-3">
-                                        <span class="rounded-circle profile-image d-block " style="background-image:url('<?php echo $image?>'); background-size: cover;"></span>
+                                        <span class="rounded-circle profile-image d-block " style="background-image:url('<?php echo $user['image']?>'); background-size: cover;"></span>
                                     </span>
                             <div class="info-card-text flex-1">
                                 <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info" data-toggle="dropdown" aria-expanded="false">
                                     <?php echo $user['fullname'];?>
-                                    <?php if (\App\Validator::is_admin() || $is_owner):?>
+                                    <?php if ($isAdmin || $is_owner):?>
                                         <i class="fal fas fa-cog fa-fw d-inline-block ml-1 fs-md"></i>
                                         <i class="fal fa-angle-down d-inline-block ml-1 fs-md"></i>
                                     <?php endif;?>
                                 </a>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="page_profile.php?id=<?php echo $user_id;?>">
+                                    <a class="dropdown-item" href="/user/<?php echo $user_id;?>">
                                         <i class="fa fa-user"></i>
                                         Смотреть профиль</a>
-                                    <?php if (\App\Validator::is_admin() || $is_owner):?>
-                                        <a class="dropdown-item" href="edit.php?id=<?php echo $user_id;?>">
+                                    <?php if ($isAdmin || $is_owner):?>
+                                        <a class="dropdown-item" href="/user/<?php echo $user_id;?>/edit/general">
                                             <i class="fa fa-edit"></i>
                                             Редактировать</a>
-                                        <a class="dropdown-item" href="security.php?id=<?php echo $user_id?>">
+                                        <a class="dropdown-item" href="/user/<?php echo $user_id;?>/edit/security">
                                             <i class="fa fa-lock"></i>
                                             Безопасность</a>
-                                        <a class="dropdown-item" href="status.php?id=<?php echo $user_id?>">
+                                        <a class="dropdown-item" href="/user/<?php echo $user_id; ?>/edit/status">
                                             <i class="fa fa-sun"></i>
                                             Установить статус</a>
-                                        <a class="dropdown-item" href="media.php?id=<?php echo $user_id?>">
+                                        <a class="dropdown-item" href="/user/<?php echo $user_id; ?>/edit/media">
                                             <i class="fa fa-camera"></i>
                                             Загрузить аватар
                                         </a>

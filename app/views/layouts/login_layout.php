@@ -33,7 +33,7 @@
         </a>
     </div>
     <div class="card p-4 border-top-left-radius-0 border-top-right-radius-0">
-        <?php echo App\Flash::getMessages(); ?>
+        <?php echo flash()->display(); ?>
 
         <?=$this->section('content')?>
     </div>

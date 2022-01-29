@@ -1,5 +1,5 @@
 <?php
-$this->layout('login_layout', ['title' => 'Войти']);
+$this->layout('layouts/login_layout', ['title' => 'Войти']);
 ?>
 
 <form method="post">

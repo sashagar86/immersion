@@ -1,5 +1,5 @@
 <?php
-$this->layout('registration_layout', ['title' => 'Регистрация']);
+$this->layout('layouts/registration_layout', ['title' => 'Регистрация']);
 ?>
 
 <div class="page-wrapper auth">
@@ -37,27 +37,30 @@ $this->layout('registration_layout', ['title' => 'Регистрация']);
                         </div>
                         <div class="col-xl-6 ml-auto mr-auto">
                             <div class="card p-4 rounded-plus bg-faded">
-                                <?php echo App\Flash::getMessages(); ?>
+                                <?php echo flash()->display(); ?>
 
-                                <form id="js-login" novalidate="" method="post">
-                                    <div class="form-group">
-                                        <label class="form-label" for="emailverify">Email</label>
-                                        <input type="email" id="emailverify" class="form-control" placeholder="Эл. адрес" required name="email">
-                                        <div class="invalid-feedback">Заполните поле.</div>
-                                        <div class="help-block">Эл. адрес будет вашим логином при авторизации</div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label" for="userpassword">Пароль <br></label>
-                                        <input type="password" id="userpassword" class="form-control" placeholder="" name="password">
-                                        <div class="invalid-feedback">Заполните поле.</div>
-                                    </div>
-
-                                    <div class="row no-gutters">
-                                        <div class="col-md-4 ml-auto text-right">
-                                            <button id="js-login-btn" type="submit" class="btn btn-block btn-danger btn-lg mt-3">Регистрация</button>
+                                <?php if (!$success):?>
+                                    <form id="js-login" novalidate="" method="post">
+                                        <div class="form-group">
+                                            <label class="form-label" for="emailverify">Email</label>
+                                            <input type="email" id="emailverify" class="form-control" placeholder="Эл. адрес" required name="email">
+                                            <div class="invalid-feedback">Заполните поле.</div>
+                                            <div class="help-block">Эл. адрес будет вашим логином при авторизации</div>
                                         </div>
-                                    </div>
-                                </form>
+                                        <div class="form-group">
+                                            <label class="form-label" for="userpassword">Пароль <br></label>
+                                            <input type="password" id="userpassword" class="form-control" placeholder="" name="password">
+                                            <div class="invalid-feedback">Заполните поле.</div>
+                                        </div>
+
+                                        <div class="row no-gutters">
+                                            <div class="col-md-4 ml-auto text-right">
+                                                <button id="js-login-btn" type="submit" class="btn btn-block btn-danger btn-lg mt-3">Регистрация</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                <?php endif;?>
+
                             </div>
                         </div>
                     </div>

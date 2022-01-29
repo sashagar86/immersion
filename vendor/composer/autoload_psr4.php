@@ -6,8 +6,22 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Tamtamchik\\SimpleFlash\\' => array($vendorDir . '/tamtamchik/simple-flash/src'),
+    'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
+    'PhpDocReader\\' => array($vendorDir . '/php-di/phpdoc-reader/src/PhpDocReader'),
+    'Opis\\Closure\\' => array($vendorDir . '/opis/closure/src'),
     'League\\Plates\\' => array($vendorDir . '/league/plates/src'),
-    'DB\\' => array($baseDir . '/database'),
+    'Kint\\' => array($vendorDir . '/kint-php/kint/src'),
+    'Invoker\\' => array($vendorDir . '/php-di/invoker/src'),
+    'FastRoute\\' => array($vendorDir . '/nikic/fast-route/src'),
+    'Delight\\Http\\' => array($vendorDir . '/delight-im/http/src'),
+    'Delight\\Db\\' => array($vendorDir . '/delight-im/db/src'),
+    'Delight\\Cookie\\' => array($vendorDir . '/delight-im/cookie/src'),
+    'Delight\\Base64\\' => array($vendorDir . '/delight-im/base64/src'),
+    'Delight\\Auth\\' => array($vendorDir . '/delight-im/auth/src'),
+    'DI\\' => array($vendorDir . '/php-di/php-di/src'),
+    'DB\\' => array($baseDir . '/app/database'),
     'Aura\\SqlQuery\\' => array($vendorDir . '/aura/sqlquery/src'),
     'App\\' => array($baseDir . '/app'),
+    '' => array($vendorDir . '/league/color-extractor/src'),
 );
