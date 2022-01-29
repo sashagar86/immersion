@@ -120,7 +120,7 @@ class ComposerStaticInitc87dada9e919a5a07040c2300814646e
         ),
         'DB\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/app/database',
+            0 => __DIR__ . '/../..' . '/app/Components/database',
         ),
         'Aura\\SqlQuery\\' => 
         array (

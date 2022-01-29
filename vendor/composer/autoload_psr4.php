@@ -20,7 +20,7 @@ return array(
     'Delight\\Base64\\' => array($vendorDir . '/delight-im/base64/src'),
     'Delight\\Auth\\' => array($vendorDir . '/delight-im/auth/src'),
     'DI\\' => array($vendorDir . '/php-di/php-di/src'),
-    'DB\\' => array($baseDir . '/app/database'),
+    'DB\\' => array($baseDir . '/app/Components/database'),
     'Aura\\SqlQuery\\' => array($vendorDir . '/aura/sqlquery/src'),
     'App\\' => array($baseDir . '/app'),
     '' => array($vendorDir . '/league/color-extractor/src'),
