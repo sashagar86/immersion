@@ -34,7 +34,6 @@ class UserController
     public function show($id)
     {
         $user = $this->findUser($id);
-
         echo $this->templates->render('user', ['user' => $user]);
     }
 
@@ -114,7 +113,7 @@ class UserController
                 }
             }
 
-            $image = new Image();
+            $image = new ImageController();
             $filename = $image->uploadImage();
 
             if ($filename) {
@@ -135,7 +134,7 @@ class UserController
             'user' => $user,
             'id' => $id,
             'statuses' => $this->getStatuses(),
-            'image' => Image::getImage($user['image'])
+            'image' => ImageController::getImage($user['image'])
         ]);
     }
 
@@ -171,6 +170,33 @@ class UserController
         }
 
         echo $this->templates->render('registration', ['success' => $success]);
+    }
+
+    public function delete($id)
+    {
+        $user = $this->findUser($id);
+
+        if(empty($user)) {
+            flash()->error('This user is not exist');
+            header("Location: /users"); exit;
+        }
+
+        if (!$this->isAdmin() && $id != $this->currentUser()) {
+            flash()->error('Выможете удалить только совй профиль');
+            header("Location: /users"); exit;
+        }
+
+        $this->db->delete('users', $id);
+
+        if ($id == $this->currentUser()) {
+            flash()->success('You remove own account');
+            $this->logout();
+        }
+
+        if ($this->isAdmin()) {
+            flash()->success("You remove profile");
+            header("Location: /users"); exit;
+        }
     }
 
     public function login()
@@ -282,7 +308,7 @@ class UserController
             $singleRow && $rows = [$rows];
 
             foreach ($rows as &$row) {
-                $row['image'] = Image::getImage($row['image']);
+                $row['image'] = ImageController::getImage($row['image']);
             }
 
             $singleRow && $rows = array_shift($rows);

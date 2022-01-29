@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use claviska\SimpleImage;
 
-class Image
+class ImageController
 {
     const ALLOWED_EXTENSION = ['jpg', 'jpeg', 'png'];
     const UPLOADS_DIR = 'uploads/';

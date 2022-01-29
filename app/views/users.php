@@ -69,7 +69,7 @@
                                             <i class="fa fa-camera"></i>
                                             Загрузить аватар
                                         </a>
-                                        <a href="/remove?id=<?php echo $user_id?>" class="dropdown-item" onclick="return confirm('are you sure?');">
+                                        <a href="/user/remove/<?php echo $user_id?>" class="dropdown-item" onclick="return confirm('are you sure?');">
                                             <i class="fa fa-window-close"></i>
                                             Удалить
                                         </a>
