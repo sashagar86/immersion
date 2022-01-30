@@ -2,12 +2,11 @@
 
 namespace App\Controllers;
 
-use App\Models\User;
-use DB\Connection;
 use DB\QueryBuilder;
 use Delight\Auth\Auth;
 use League\Plates\Engine;
 use SimpleMail;
+use App\Models\User;
 
 class Controller
 {
@@ -17,12 +16,12 @@ class Controller
     public $db;
     public $model;
 
-    public function __construct()
+    public function __construct(QueryBuilder $db, Engine $templates, Auth $auth, User $model, SimpleMail $mailer)
     {
-        $this->db = new QueryBuilder();
-        $this->templates = new Engine('../app/views');
-        $this->auth = new Auth(Connection::make());
-        $this->mailer = new SimpleMail();
-        $this->model = new User();
+        $this->db = $db;
+        $this->templates = $templates;
+        $this->auth = $auth;
+        $this->mailer = $mailer;
+        $this->model = $model;
     }
 }

@@ -5,8 +5,22 @@ if( !session_id() ) @session_start();
 include '../vendor/autoload.php';
 
 use DI\ContainerBuilder;
+use League\Plates\Engine;
+use Delight\Auth\Auth;
 
 $containerBuilder = new ContainerBuilder();
+
+
+$containerBuilder->addDefinitions([
+    Engine::class => function(){
+        return new Engine('../app/views');
+    },
+
+    Auth::class => function(){
+        return new Auth(\DB\Connection::make());
+    }
+]);
+
 $container = $containerBuilder->build();
 
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {

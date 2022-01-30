@@ -13,11 +13,12 @@ class UserController extends Controller
 
     public function create()
     {
+        $data = $_POST;
         $this->model->checkPermission();
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             try {
-                $userId = $this->auth->admin()->createUser($_POST['email'], $_POST['password'], $_POST['username']);
+                $userId = $this->auth->admin()->createUser($data['email'], $data['password'], $data['username']);
             }
             catch (\Delight\Auth\InvalidEmailException $e) {
                 flash()->error('Invalid email address');
@@ -39,27 +40,28 @@ class UserController extends Controller
             }
         }
 
-        echo $this->templates->render('create', ['statuses' => $this->getStatuses()]);
+        echo $this->templates->render('create', ['statuses' => $this->model->getStatuses()]);
     }
 
     public function edit($id, $action = null)
     {
+        $data = $_POST;
         $this->model->checkPermission();
 
         $user = $this->model->findUser($id);
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST'){
-            $this->model->_changePassword($id);
+            $this->model->changePassword($id, $data['password']);
 
-            $error = $this->model->checkEmail() && $this->model->checkExistUser($user);
+            $error = $this->model->checkEmail($data['email']) && $this->model->checkExistUser($user);
 
             $image = new ImageController();
             $filename = $image->uploadImage();
 
-            $_POST['image'] = $filename;
+            $data['image'] = $filename;
 
-            if (!$error && !empty($_POST)) {
-                $this->db->update('users', $_POST, $id);
+            if (!$error && !empty($data)) {
+                $this->db->update('users', $data, $id);
             } else {
                 $url = $_SERVER['REQUEST_URI'];
                 header("Location: $url"); exit;
@@ -71,8 +73,7 @@ class UserController extends Controller
         echo $this->templates->render($action ?? 'edit', [
             'user' => $user,
             'id' => $id,
-            'statuses' => $this->model->getStatuses(),
-            'image' => ImageController::getImage($user['image'])
+            'statuses' => $this->model->getStatuses()
         ]);
     }
 

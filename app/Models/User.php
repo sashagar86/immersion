@@ -2,27 +2,27 @@
 
 namespace App\Models;
 
+use App\Components\Validator;
 use App\Controllers\ImageController;
-use App\Validator;
-use DB\Connection;
 use DB\QueryBuilder;
 use Delight\Auth\Auth;
 
 class User
 {
     private $auth;
+    private $db;
 
     const ADMIN = 1;
     const STATUS_ACTIVE = 1;
     const STATUS_OUTSIDE = 2;
     const STATUS_NOT_DISTURB = 3;
 
-    private $statuses = [self::STATUS_ACTIVE => 'Онлайн', self::STATUS_OUTSIDE => 'Отошел', self::STATUS_NOT_DISTURB => 'Не беспокоить'];
+    public $statuses = [self::STATUS_ACTIVE => 'Онлайн', self::STATUS_OUTSIDE => 'Отошел', self::STATUS_NOT_DISTURB => 'Не беспокоить'];
 
-    public function __construct()
+    public function __construct(QueryBuilder $db, Auth $auth)
     {
-        $this->auth = new Auth(Connection::make());
-        $this->db = new QueryBuilder();
+        $this->auth = $auth;
+        $this->db = $db;
     }
 
     public function all()
@@ -73,21 +73,21 @@ class User
         }
     }
 
-    public function _changePassword($id)
+    public function changePassword($id, $password)
     {
-        if(isset($_POST['password'])) {
-            if (!empty($_POST['password'])) {
-                $this->auth->admin()->changePasswordForUserById($id, $_POST['password']);
+        if(isset($password)) {
+            if (!empty($password)) {
+                $this->auth->admin()->changePasswordForUserById($id, $password);
             }
-            unset($_POST['password']);
+            unset($password);
         }
     }
 
-    public function checkEmail()
+    public function checkEmail($email)
     {
         $error = false;
-        if (isset($_POST['email'])) {
-            if (!Validator::isEmail($_POST['email'])) {
+        if (isset($email)) {
+            if (!Validator::isEmail($email)) {
                 flash()->error('Email is invalid');
                 $error = true;
             }
